@@ -1,0 +1,6 @@
+{
+  "name": "CCTV Work Order Scheduler",
+  "description": "An appointment scheduling and work order management system for CCTV installation and maintenance teams, featuring a bottom navigation UI.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

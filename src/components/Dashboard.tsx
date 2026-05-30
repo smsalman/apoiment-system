@@ -17,9 +17,10 @@ interface DashboardProps {
   technicians: Technician[];
   onSelectOrder: (orderId: string) => void;
   setActiveTab: (tab: string) => void;
+  themeStyle?: 'slate' | 'cyber' | 'steel' | 'solar';
 }
 
-export default function Dashboard({ orders, technicians, onSelectOrder, setActiveTab }: DashboardProps) {
+export default function Dashboard({ orders, technicians, onSelectOrder, setActiveTab, themeStyle = 'slate' }: DashboardProps) {
   // Filter for today's orders (relates to index match of getRelativeDate(0))
   // To keep it clean, let's look at orders on today's date "2026-05-30" or general overall stats
   const todayStr = '2026-05-30';
@@ -40,16 +41,84 @@ export default function Dashboard({ orders, technicians, onSelectOrder, setActiv
   // Find unassigned urgent jobs
   const unassignedUrgent = orders.filter(o => o.technicianId === 'unassigned' && o.priority === 'High');
 
+  // Unified visual adjustments depending on choice
+  const config = {
+    slate: {
+      card: "bg-white border border-slate-100 shadow-3xs text-slate-900",
+      headerBg: "bg-slate-900 text-white shadow-xl",
+      headerTag: "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30",
+      accentText: "text-emerald-600",
+      pill: "bg-slate-50 text-slate-705 border border-slate-100",
+      subtleCard: "bg-slate-50 border border-slate-100",
+      textDark: "text-slate-900",
+      textMuted: "text-slate-500",
+      divider: "divide-slate-100",
+      borderLine: "border-slate-100",
+      subText: "text-slate-400"
+    },
+    cyber: {
+      card: "bg-slate-900 border border-slate-800 text-slate-100 shadow-md",
+      headerBg: "bg-slate-950 border border-[#10b981]/20 text-slate-100 shadow-xl",
+      headerTag: "bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 font-mono",
+      accentText: "text-emerald-400",
+      pill: "bg-slate-950 text-slate-350 border border-slate-850",
+      subtleCard: "bg-slate-950/60 border border-slate-850",
+      textDark: "text-[#10b981] font-mono",
+      textMuted: "text-slate-400",
+      divider: "divide-slate-850",
+      borderLine: "border-slate-800",
+      subText: "text-slate-500"
+    },
+    steel: {
+      card: "bg-white border border-teal-150/90 text-slate-900 shadow-sm",
+      headerBg: "bg-teal-950 text-teal-100 border border-teal-900 shadow-md",
+      headerTag: "bg-teal-500/25 text-teal-200 border border-teal-600/35",
+      accentText: "text-teal-700",
+      pill: "bg-teal-50 text-teal-950 border border-teal-100",
+      subtleCard: "bg-teal-50/20 border border-teal-100/60",
+      textDark: "text-teal-950",
+      textMuted: "text-teal-800/80",
+      divider: "divide-teal-50",
+      borderLine: "border-teal-50",
+      subText: "text-teal-300"
+    },
+    solar: {
+      card: "bg-white border border-amber-205/85 text-amber-950 shadow-2xs",
+      headerBg: "bg-[#2d1c0c] text-amber-50 border border-[#3d2714]",
+      headerTag: "bg-[#3d2714] text-amber-250 border border-amber-900/30",
+      accentText: "text-amber-800",
+      pill: "bg-[#faf6f0] text-amber-900 border border-amber-100",
+      subtleCard: "bg-[#faf6f0] border border-amber-100",
+      textDark: "text-[#2d1c0c] font-bold",
+      textMuted: "text-[#785429]",
+      divider: "divide-amber-100/60",
+      borderLine: "border-amber-100/60",
+      subText: "text-amber-400"
+    }
+  }[themeStyle] || {
+    card: "bg-white border border-slate-100 shadow-3xs text-slate-900",
+    headerBg: "bg-slate-900 text-white shadow-xl",
+    headerTag: "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30",
+    accentText: "text-emerald-600",
+    pill: "bg-slate-50 text-slate-705 border border-slate-100",
+    subtleCard: "bg-slate-50 border border-slate-100",
+    textDark: "text-slate-900",
+    textMuted: "text-slate-555",
+    divider: "divide-slate-100",
+    borderLine: "border-slate-100",
+    subText: "text-slate-400"
+  };
+
   return (
     <div className="space-y-6 pb-24">
       {/* Brand Header */}
-      <div className="flex items-center justify-between bg-slate-900 text-white p-6 rounded-2xl shadow-xl overflow-hidden relative">
+      <div className={`flex items-center justify-between p-6 rounded-2xl overflow-hidden relative transition-colors duration-300 ${config.headerBg}`}>
         <div className="relative z-10 space-y-1">
-          <span className="text-xs font-semibold px-2.5 py-1 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-full font-mono uppercase tracking-wider">
+          <span className={`text-[10px] font-bold font-mono uppercase tracking-wider px-2.5 py-1 rounded-full border ${config.headerTag}`}>
             Live Ops Monitor
           </span>
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">CCTV Net-Dispatch</h1>
-          <p className="text-slate-400 text-sm max-w-sm">
+          <p className={`text-sm max-w-sm ${config.subText}`}>
             Operational dashboard for technician assignments and camera install streams.
           </p>
         </div>
@@ -60,7 +129,7 @@ export default function Dashboard({ orders, technicians, onSelectOrder, setActiv
 
       {/* Action Banners */}
       {unassignedUrgent.length > 0 && (
-        <div className="bg-rose-50 border border-rose-200 text-rose-800 p-4 rounded-xl flex items-start gap-3 animate-pulse shadow-sm">
+        <div className="bg-rose-50 border border-rose-200 text-rose-800 p-4 rounded-xl flex items-start gap-3 animate-pulse shadow-xs">
           <AlertCircle className="h-5 w-5 text-rose-600 shrink-0 mt-0.5" />
           <div className="flex-1">
             <h4 className="font-bold text-sm">Urgent Dispatch Warning</h4>
@@ -82,7 +151,7 @@ export default function Dashboard({ orders, technicians, onSelectOrder, setActiv
       {/* Grid of Key Performance Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Today's Appointments */}
-        <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-xs space-y-3">
+        <div className={`p-4 rounded-xl space-y-3 transition-all duration-300 ${config.card}`}>
           <div className="flex items-center justify-between text-slate-400">
             <span className="text-xs font-mono uppercase tracking-wider font-semibold">Today's Load</span>
             <div className="p-1.5 bg-blue-50 text-blue-600 rounded-lg">
@@ -90,13 +159,13 @@ export default function Dashboard({ orders, technicians, onSelectOrder, setActiv
             </div>
           </div>
           <div>
-            <div className="text-2xl font-bold text-slate-900">{todayOrders.length}</div>
-            <p className="text-[10px] text-slate-500 font-mono mt-0.5">Active field items today</p>
+            <div className={`text-2xl font-bold ${config.textDark}`}>{todayOrders.length}</div>
+            <p className={`text-[10px] font-mono mt-0.5 ${config.textMuted}`}>Active field items today</p>
           </div>
         </div>
 
         {/* Dispatch Progress */}
-        <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-xs space-y-3">
+        <div className={`p-4 rounded-xl space-y-3 transition-all duration-300 ${config.card}`}>
           <div className="flex items-center justify-between text-slate-400">
             <span className="text-xs font-mono uppercase tracking-wider font-semibold">In Progress</span>
             <div className="p-1.5 bg-amber-50 text-amber-600 rounded-lg">
@@ -104,13 +173,13 @@ export default function Dashboard({ orders, technicians, onSelectOrder, setActiv
             </div>
           </div>
           <div>
-            <div className="text-2xl font-bold text-slate-900">{inProgressOrders.length}</div>
-            <p className="text-[10px] text-slate-500 font-mono mt-0.5">Active tech on-site setup</p>
+            <div className={`text-2xl font-bold ${config.textDark}`}>{inProgressOrders.length}</div>
+            <p className={`text-[10px] font-mono mt-0.5 ${config.textMuted}`}>Active tech on-site setup</p>
           </div>
         </div>
 
         {/* Team State */}
-        <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-xs space-y-3">
+        <div className={`p-4 rounded-xl space-y-3 transition-all duration-300 ${config.card}`}>
           <div className="flex items-center justify-between text-slate-400">
             <span className="text-xs font-mono uppercase tracking-wider font-semibold">On-Duty Techs</span>
             <div className="p-1.5 bg-emerald-50 text-emerald-600 rounded-lg">
@@ -118,17 +187,17 @@ export default function Dashboard({ orders, technicians, onSelectOrder, setActiv
             </div>
           </div>
           <div>
-            <div className="text-2xl font-bold text-slate-900">
-              {availableTechs + activeTechs}<span className="text-xs text-slate-400 ml-1">/ {technicians.length}</span>
+            <div className={`text-2xl font-bold ${config.textDark}`}>
+              {availableTechs + activeTechs}<span className={`text-xs ml-1 ${config.textMuted}`}>/ {technicians.length}</span>
             </div>
-            <p className="text-[10px] text-slate-500 mt-0.5 font-mono">
-              <span className="text-indigo-600 font-semibold">{activeTechs} On Site</span> • <span className="text-emerald-600 font-semibold">{availableTechs} Avail</span>
+            <p className={`text-[10px] mt-0.5 font-mono ${config.textMuted}`}>
+              <span className="text-indigo-600 font-semibold">{activeTechs} On Site</span> • <span className="text-emerald-650 text-emerald-600 font-semibold">{availableTechs} Avail</span>
             </p>
           </div>
         </div>
 
         {/* Global Success rate */}
-        <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-xs space-y-3">
+        <div className={`p-4 rounded-xl space-y-3 transition-all duration-300 ${config.card}`}>
           <div className="flex items-center justify-between text-slate-400">
             <span className="text-xs font-mono uppercase tracking-wider font-semibold">Success</span>
             <div className="p-1.5 bg-indigo-50 text-indigo-600 rounded-lg">
@@ -136,8 +205,8 @@ export default function Dashboard({ orders, technicians, onSelectOrder, setActiv
             </div>
           </div>
           <div>
-            <div className="text-2xl font-bold text-slate-900">{completionRate}%</div>
-            <div className="w-full bg-slate-100 h-1.5 rounded-full mt-2 overflow-hidden">
+            <div className={`text-2xl font-bold ${config.textDark}`}>{completionRate}%</div>
+            <div className="w-full bg-slate-100 dark:bg-slate-950 h-1.5 rounded-full mt-2 overflow-hidden">
               <div 
                 className="bg-emerald-500 h-full transition-all duration-500" 
                 style={{ width: `${completionRate}%` }}
@@ -151,15 +220,15 @@ export default function Dashboard({ orders, technicians, onSelectOrder, setActiv
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         
         {/* Left Column: Today's Agenda */}
-        <div className="md:col-span-2 bg-white rounded-2xl border border-slate-100 shadow-xs p-5 space-y-4">
+        <div className={`md:col-span-2 rounded-2xl p-5 space-y-4 transition-all duration-300 ${config.card}`}>
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
-              <h3 className="font-bold text-slate-900 text-lg">Today's Deployment</h3>
-              <p className="text-xs text-slate-500">Service visits and setups scheduled for today.</p>
+              <h3 className={`font-bold text-lg ${config.textDark}`}>Today's Deployment</h3>
+              <p className={`text-xs ${config.textMuted}`}>Service visits and setups scheduled for today.</p>
             </div>
             <button 
               onClick={() => setActiveTab('orders')}
-              className="text-xs text-emerald-600 font-semibold hover:underline flex items-center gap-1"
+              className="text-xs text-emerald-55 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 transition"
             >
               Manage ({orders.length}) <ArrowRight className="h-3 w-3" />
             </button>
@@ -167,12 +236,12 @@ export default function Dashboard({ orders, technicians, onSelectOrder, setActiv
 
           <div className="space-y-3">
             {todayOrders.length === 0 ? (
-              <div className="text-center py-8 text-slate-400 border border-dashed border-slate-100 rounded-xl">
-                <Briefcase className="h-8 w-8 mx-auto stroke-1 mb-2 text-slate-300" />
-                <p className="text-sm font-medium">No order runs scheduled for today.</p>
+              <div className={`text-center py-8 border border-dashed rounded-xl ${config.borderLine}`}>
+                <Briefcase className="h-8 w-8 mx-auto stroke-1 mb-2 text-slate-350" />
+                <p className={`text-sm font-medium ${config.textMuted}`}>No order runs scheduled for today.</p>
                 <button
                   onClick={() => setActiveTab('new-order')}
-                  className="mt-2 text-xs bg-slate-900 text-white px-3 py-1.5 rounded-lg font-mono tracking-wide hover:bg-slate-800 transition"
+                  className="mt-2 text-xs bg-slate-900 hover:bg-slate-850 dark:bg-emerald-500 dark:text-slate-950 text-white px-3 py-1.5 rounded-lg font-mono tracking-wide transition font-bold"
                 >
                   + Add Today's First Job
                 </button>
@@ -180,22 +249,18 @@ export default function Dashboard({ orders, technicians, onSelectOrder, setActiv
             ) : (
               todayOrders.map((order) => {
                 const assignedTech = technicians.find(t => t.id === order.technicianId);
-                const progressNum = order.checklist.length > 0 
-                  ? Math.round((order.checklist.filter(c => c.completed).length / order.checklist.length) * 100) 
-                  : 0;
 
                 return (
                   <div 
                     key={order.id} 
                     onClick={() => {
-                      // Switch tab to orders and trigger popup
                       onSelectOrder(order.id);
                     }}
-                    className="group border border-slate-100 hover:border-emerald-200 hover:shadow-xs rounded-xl p-4 transition-all duration-150 cursor-pointer text-left focus:outline-none flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between"
+                    className={`group border rounded-xl p-4 transition-all duration-150 cursor-pointer text-left focus:outline-none flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between ${config.borderLine} hover:border-emerald-500 hover:shadow-2xs`}
                   >
                     <div className="space-y-1 flex-1">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-mono text-xs font-bold text-slate-400 group-hover:text-emerald-600 transition-colors">
+                        <span className="font-mono text-xs font-bold text-slate-400 group-hover:text-emerald-500 transition-colors">
                           {order.id}
                         </span>
                         <span className={`text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-full border ${
@@ -219,25 +284,25 @@ export default function Dashboard({ orders, technicians, onSelectOrder, setActiv
                           {order.status}
                         </span>
                       </div>
-                      <h4 className="font-bold text-slate-900 text-sm group-hover:text-emerald-900 transition-colors line-clamp-1">
+                      <h4 className={`font-bold text-sm ${config.textDark} transition-colors line-clamp-1`}>
                         {order.customerName}
                       </h4>
-                      <p className="text-xs text-slate-500 flex items-center gap-1">
+                      <p className={`text-xs flex items-center gap-1 ${config.textMuted}`}>
                         <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
                         <span className="truncate">{order.customerAddress}</span>
                       </p>
                     </div>
 
-                    <div className="flex flex-row sm:flex-col items-start sm:items-end justify-between w-full sm:w-auto pt-3 sm:pt-0 border-t sm:border-t-0 border-slate-100 gap-2 shrink-0">
+                    <div className={`flex flex-row sm:flex-col items-start sm:items-end justify-between w-full sm:w-auto pt-3 sm:pt-0 border-t sm:border-t-0 gap-2 shrink-0 ${config.borderLine}`}>
                       <div className="text-right">
-                        <div className="font-mono text-xs font-semibold text-slate-900">{order.timeSlot}</div>
-                        <div className="text-[10px] text-slate-400 font-mono">Slot Timing</div>
+                        <div className={`font-mono text-xs font-semibold ${config.textDark}`}>{order.timeSlot}</div>
+                        <div className={`text-[10px] font-mono ${config.textMuted}`}>Slot Timing</div>
                       </div>
-                      <div className="flex items-center gap-1.5 bg-slate-50 px-2 py-1 rounded-lg border border-slate-100">
+                      <div className={`flex items-center gap-1.5 px-2 py-1 rounded-lg border ${config.pill}`}>
                         <div className="w-5 h-5 rounded-full bg-slate-950 font-mono text-[9px] text-slate-100 flex items-center justify-center font-bold">
                           {assignedTech?.avatar || '??'}
                         </div>
-                        <span className="text-xs text-slate-700 font-medium">
+                        <span className="text-xs font-medium">
                           {assignedTech?.name?.split(' ')[0] || 'Unassigned'}
                         </span>
                       </div>
@@ -252,9 +317,9 @@ export default function Dashboard({ orders, technicians, onSelectOrder, setActiv
         {/* Right Column: Deployment Statistics */}
         <div className="space-y-6">
           {/* Active Technicians Box */}
-          <div className="bg-white rounded-2xl border border-slate-100 shadow-xs p-5 space-y-4">
-            <h3 className="font-bold text-slate-900 text-md">Today's Service Crew</h3>
-            <div className="divide-y divide-slate-100">
+          <div className={`rounded-2xl p-5 space-y-4 transition-all duration-300 ${config.card}`}>
+            <h3 className={`font-bold text-md ${config.textDark}`}>Today's Service Crew</h3>
+            <div className={`divide-y ${config.divider}`}>
               {technicians.map((tech) => {
                 const assignedToday = orders.filter(
                   o => o.technicianId === tech.id && o.serviceDate === todayStr
@@ -267,9 +332,9 @@ export default function Dashboard({ orders, technicians, onSelectOrder, setActiv
                         {tech.avatar}
                       </div>
                       <div>
-                        <div className="text-xs font-bold text-slate-950">{tech.name}</div>
-                        <div className="text-[10px] text-slate-500 font-mono capitalize">
-                          {tech.status === 'On Site' ? '🎥 On Site Work' : `${tech.status}`}
+                        <div className={`text-xs font-bold ${config.textDark}`}>{tech.name}</div>
+                        <div className={`text-[10px] font-mono capitalize ${config.textMuted}`}>
+                          {tech.status === 'On Site' ? 'On Site Work' : `${tech.status}`}
                         </div>
                       </div>
                     </div>
@@ -277,14 +342,14 @@ export default function Dashboard({ orders, technicians, onSelectOrder, setActiv
                     <div className="text-right flex flex-col items-end">
                       <span className={`text-[10px] px-2 py-0.5 rounded-full font-mono border ${
                         tech.status === 'Available'
-                          ? 'bg-emerald-50 text-emerald-700 border-emerald-100'
+                          ? 'bg-emerald-50 text-emerald-700 border border-emerald-100'
                           : tech.status === 'On Site'
                           ? 'bg-blue-50 text-blue-700 border border-blue-150'
-                          : 'bg-slate-50 text-slate-505 border-slate-150'
+                          : 'bg-slate-50 text-slate-600 border border-slate-150'
                       }`}>
                         {tech.status}
                       </span>
-                      <span className="text-[10px] text-slate-400 font-mono mt-1">
+                      <span className={`text-[9px] font-mono mt-1 ${config.textMuted}`}>
                         {assignedToday} {assignedToday === 1 ? 'job' : 'jobs'} today
                       </span>
                     </div>
@@ -294,22 +359,22 @@ export default function Dashboard({ orders, technicians, onSelectOrder, setActiv
             </div>
             <button 
               onClick={() => setActiveTab('technicians')}
-              className="w-full text-center text-xs text-slate-600 hover:text-emerald-600 font-semibold pt-1 block hover:underline"
+              className={`w-full text-center text-xs font-semibold pt-1 block hover:underline ${config.textMuted} hover:text-emerald-500`}
             >
               Update Crew Status
             </button>
           </div>
 
           {/* Quick Guide Tips */}
-          <div className="bg-slate-950 text-slate-300 rounded-2xl p-5 space-y-3">
+          <div className="bg-slate-950 text-slate-300 rounded-2xl p-5 space-y-3 border border-slate-800 shadow-xl">
             <div className="flex items-center gap-2">
               <Camera className="w-4 h-4 text-emerald-400 shrink-0" />
               <h4 className="text-xs font-bold font-mono uppercase tracking-wider text-white">Grid Operator Tips</h4>
             </div>
             <ul className="text-xs space-y-1.5 text-slate-400 list-disc list-inside">
-              <li>Deploy technicians based on their localized geographic service sector.</li>
-              <li>Check off completed installation items directly in the Work Orders checklist card.</li>
-              <li>Write specific camera IP addresses or channel logs inside Job Notes.</li>
+              <li>Deploy technicians based on localized job order density specifications.</li>
+              <li>Check off task completion checklists in real time on the dispatch board.</li>
+              <li>Record camera serial logs and system parameters inside notes for audits.</li>
             </ul>
           </div>
         </div>

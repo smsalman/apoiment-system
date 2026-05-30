@@ -28,6 +28,7 @@ interface WorkOrdersListProps {
   onDeleteOrder: (orderId: string) => void;
   selectedOrderId: string | null;
   setSelectedOrderId: (orderId: string | null) => void;
+  themeStyle?: 'slate' | 'cyber' | 'steel' | 'solar';
 }
 
 export default function WorkOrdersList({ 
@@ -40,7 +41,8 @@ export default function WorkOrdersList({
   onEditOrder,
   onDeleteOrder,
   selectedOrderId,
-  setSelectedOrderId
+  setSelectedOrderId,
+  themeStyle = 'slate'
 }: WorkOrdersListProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedStatusTab, setSelectedStatusTab] = useState<string>('All');
@@ -53,6 +55,74 @@ export default function WorkOrdersList({
 
   // Find selected order
   const activeOrder = orders.find(o => o.id === selectedOrderId);
+
+  // Unified visual adjustments depending on choice
+  const config = {
+    slate: {
+      card: "bg-white border border-slate-150/90 shadow-3xs text-slate-900",
+      activeTab: "bg-slate-950 text-white font-bold",
+      inactiveTab: "bg-slate-100 text-slate-600 hover:bg-slate-205",
+      headerBg: "bg-slate-950 text-slate-50",
+      inputClass: "bg-white text-slate-900 border-slate-200 focus:ring-emerald-500 focus:border-emerald-500",
+      accentButton: "bg-slate-950 text-white hover:bg-slate-850",
+      pill: "bg-slate-55 bg-slate-50 text-slate-705 border border-slate-100",
+      subtleCard: "bg-slate-55 bg-slate-50 border border-slate-100",
+      textDark: "text-slate-900",
+      textMuted: "text-slate-500 font-medium",
+      borderLine: "border-slate-100"
+    },
+    cyber: {
+      card: "bg-slate-900 border border-slate-800 text-slate-100 shadow-md",
+      activeTab: "bg-emerald-505 bg-emerald-500 text-slate-955 text-slate-950 font-bold",
+      inactiveTab: "bg-slate-800 text-slate-400 hover:bg-slate-700",
+      headerBg: "bg-slate-950 border border-slate-800 text-slate-100",
+      inputClass: "bg-slate-950 text-slate-100 border-slate-850 focus:ring-emerald-500 focus:border-emerald-500",
+      accentButton: "bg-emerald-505 bg-emerald-500 text-slate-955 text-slate-950 hover:bg-emerald-400 font-bold",
+      pill: "bg-slate-950 text-slate-350 border border-slate-850",
+      subtleCard: "bg-slate-950/60 border border-slate-850",
+      textDark: "text-[#10b981] font-mono",
+      textMuted: "text-slate-400 font-mono",
+      borderLine: "border border-slate-850"
+    },
+    steel: {
+      card: "bg-white border border-teal-150/90 text-slate-900 shadow-sm",
+      activeTab: "bg-teal-700 text-white font-medium",
+      inactiveTab: "bg-teal-50 text-teal-800 hover:bg-teal-100",
+      headerBg: "bg-teal-900 text-teal-100",
+      inputClass: "bg-white text-slate-900 border-teal-150 focus:ring-teal-500 focus:teal-500",
+      accentButton: "bg-teal-700 text-white hover:bg-teal-850",
+      pill: "bg-teal-50 text-teal-950 border border-teal-100",
+      subtleCard: "bg-teal-50/20 border border-teal-100/60",
+      textDark: "text-teal-950 font-medium",
+      textMuted: "text-teal-850",
+      borderLine: "border-teal-100"
+    },
+    solar: {
+      card: "bg-white border border-amber-205/85 text-amber-950 shadow-2xs",
+      activeTab: "bg-amber-800 text-white font-bold hover:bg-amber-900",
+      inactiveTab: "bg-[#faf6f0] text-amber-900 hover:bg-[#eae0d0]",
+      headerBg: "bg-[#2d1c0c] text-amber-50",
+      inputClass: "bg-white text-amber-950 border-amber-200 focus:ring-amber-500 focus:amber-500",
+      accentButton: "bg-amber-800 text-white hover:bg-amber-900 font-bold",
+      pill: "bg-[#faf6f0] text-amber-900 border border-[#eae0d0]",
+      subtleCard: "bg-[#faf6f0] border border-amber-100",
+      textDark: "text-[#2d1c0c] font-bold",
+      textMuted: "text-[#785429]",
+      borderLine: "border-amber-100/65"
+    }
+  }[themeStyle] || {
+    card: "bg-white border border-slate-100 shadow-3xs text-slate-900",
+    activeTab: "bg-slate-955 text-white font-bold",
+    inactiveTab: "bg-slate-100 text-slate-650 hover:bg-slate-200/50",
+    headerBg: "bg-slate-950 text-slate-50",
+    inputClass: "bg-white text-slate-900 border-slate-200",
+    accentButton: "bg-slate-955 text-white hover:bg-slate-850",
+    pill: "bg-slate-50 text-slate-705 border border-slate-100",
+    subtleCard: "bg-slate-50 border border-slate-100",
+    textDark: "text-slate-900",
+    textMuted: "text-slate-555",
+    borderLine: "border-[#e2e8f0]"
+  };
 
   // Filters calculation
   const filteredOrders = orders.filter((order) => {

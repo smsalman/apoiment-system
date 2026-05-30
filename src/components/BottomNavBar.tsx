@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, ClipboardList, Plus, Users } from 'lucide-react';
+import { Home, ClipboardList, Plus, Users, Calendar } from 'lucide-react';
 
 interface BottomNavBarProps {
   activeTab: string;
@@ -12,6 +12,7 @@ export default function BottomNavBar({ activeTab, setActiveTab, pendingCount }: 
     { id: 'dashboard', label: 'Monitor', icon: Home },
     { id: 'orders', label: 'Work Orders', icon: ClipboardList, badge: pendingCount },
     { id: 'new-order', label: 'New Job', icon: Plus, isCenter: true },
+    { id: 'calendar', label: 'Calendar', icon: Calendar },
     { id: 'technicians', label: 'Service Team', icon: Users },
   ];
 

@@ -29,7 +29,7 @@ export interface WorkOrder {
   serviceDate: string; // YYYY-MM-DD
   timeSlot: string; // e.g., "09:00 AM - 11:00 AM"
   technicianId: string; // ID of Technician or "unassigned"
-  jobType: 'Installation' | 'Troubleshooting' | 'Upgrades' | 'Maintenance';
+  jobType: 'CCTV Installation' | 'CCTV Service' | 'Laptop Service' | 'PC Service' | 'Installation' | 'Troubleshooting' | 'Upgrades' | 'Maintenance';
   description: string;
   priority: 'Low' | 'Medium' | 'High';
   status: 'Pending' | 'In Progress' | 'Completed' | 'Cancelled';
